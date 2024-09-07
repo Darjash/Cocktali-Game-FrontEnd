@@ -1,0 +1,38 @@
+<div class="container">
+  <h1>Cocktail Guessing Game</h1>
+  <div *ngIf="!gameOver && instructions != '' ">
+    <div>
+    <h3>High Score: {{ highScore }}</h3>
+  </div>
+    <h3>Guess the cocktail:</h3>
+    <p style="letter-spacing: 0.2em;">{{ hiddenCocktailName }}</p>
+
+    <input [(ngModel)]="guess" placeholder="Your guess" />
+    <button (click)="makeGuess()">Guess</button>
+    <button (click)="startNewGame()">Skip</button>
+
+    <p><b>Instructions:</b> {{ instructions }}</p>
+    <p *ngIf="attemptsLeft <= 4"><b>Category:</b> {{category}} </p>
+    <p *ngIf="attemptsLeft <= 3"><b>Glass:</b> {{glass}} </p>
+    <div *ngIf="attemptsLeft <= 2">
+      <b>Ingredients:</b>
+      <ul>
+        <li *ngFor="let ingredient of ingredients | keyvalue">
+          {{ ingredient.key }}: {{ ingredient.value }}
+        </li>
+      </ul>
+    </div>
+    <div  *ngIf="attemptsLeft <= 1">
+      <img [src]="imageUrl" alt="Cocktail Image" style="width: 150px; height: auto;"/>
+    </div>
+    <p><b>Attempts left:</b> {{ attemptsLeft }}</p>
+    <p><b>Current Score:</b> {{ currentScore }}</p>
+  </div>
+
+  <div *ngIf="gameOver">
+    <h2>Game Over</h2>
+    <p>The cocktail was: {{ cocktailName }}</p>
+    <p><b>Your final score:</b> {{ currentScore }}</p>
+    <button (click)="restartGame()">Play Again</button>
+  </div>
+</div>
