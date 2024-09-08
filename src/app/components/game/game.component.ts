@@ -20,6 +20,7 @@ export class GameComponent implements OnInit {
   guess: string = '';
   gameOver: boolean = false;
   showError: boolean = false;
+  isSkipButtonDisabled: boolean= false;
 
   constructor(private gameService: GameService) {}
 
@@ -56,6 +57,9 @@ export class GameComponent implements OnInit {
     });
     this.gameOver = false;
     this.getHighScore();
+    if(this.hiddenCocktailName.replace(/[^_]/g, "").length <=2){
+      this.isSkipButtonDisabled = true;
+    }
   }
 
   makeGuess(): void {
@@ -86,6 +90,9 @@ export class GameComponent implements OnInit {
   }
 
   skip() :void{
+    if(this.hiddenCocktailName.replace(/[^_]/g, "").length <=3){
+      this.isSkipButtonDisabled = true;
+    }
     this.guess = 'UserSkippedRound';
     this.makeGuess()
     this.guess = '';

@@ -18,7 +18,7 @@
     <div style="display: flex; gap: 10px; margin-bottom: 20px;">
       <input [(ngModel)]="guess"  class="form-control" id="FormControlInput1" placeholder="Your guess" style="flex: 1;">
       <button (click)="makeGuess()" type="button" class="btn btn-primary">Guess</button>
-      <button (click)="skip()" type="button" class="btn btn-secondary">Skip</button>
+      <button (click)="skip()" type="button" [disabled]="isSkipButtonDisabled" class="btn btn-secondary">Skip</button>
     </div>
 
     <div style="display: flex; flex-direction: column; margin-bottom: 20px;">
