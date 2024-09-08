@@ -19,6 +19,7 @@ export class GameComponent implements OnInit {
   cocktailName: string = '';  
   guess: string = '';
   gameOver: boolean = false;
+  showError: boolean = false;
 
   constructor(private gameService: GameService) {}
 
@@ -59,12 +60,12 @@ export class GameComponent implements OnInit {
 
   makeGuess(): void {
     if (!this.guess) return;
+    const previousAttempts = this.attemptsLeft;
 
     this.gameService.makeGuess(this.guess.trim()).subscribe(data => {
       this.hiddenCocktailName = data.hiddenCocktailName;
       this.attemptsLeft = data.attemptsLeft;
       this.currentScore = data.score;
-
       this.cocktailName = data.currentCocktail.strDrink;
       this.instructions = data.currentCocktail.strInstructions;
       this.category = data.currentCocktail.strCategory;
@@ -76,10 +77,19 @@ export class GameComponent implements OnInit {
         this.gameOver = true;
         this.getHighScore();
       }
+      if (this.attemptsLeft < previousAttempts && this.guess != "UserSkippedRound") {
+        this.showError = true;
+        setTimeout(() => this.showError = false, 500); 
+      }
     });
-    
     this.guess = '';
   }
+
+  skip() :void{
+    this.guess = 'UserSkippedRound';
+    this.makeGuess()
+    this.guess = '';
+    }
 
   getHighScore(): void {
     this.gameService.getHighScore().subscribe(score => {

@@ -1,16 +1,32 @@
-<div class="container">
-  <h1>Cocktail Guessing Game</h1>
-  <div *ngIf="!gameOver && instructions != '' ">
-    <div>
-    <h3>High Score: {{ highScore }}</h3>
+<div class="container-fluid" style="display: flex; flex-direction: column">
+  <h2>Cocktail Game</h2>
+
+  <div *ngIf="instructions === ''" class="spinner-border" role="status">
+    <span class="sr-only"></span>
   </div>
-    <h3>Guess the cocktail:</h3>
-    <p style="letter-spacing: 0.2em;">{{ hiddenCocktailName }}</p>
 
-    <input [(ngModel)]="guess" placeholder="Your guess" />
-    <button (click)="makeGuess()">Guess</button>
-    <button (click)="startNewGame()">Skip</button>
+  <div *ngIf="!gameOver && instructions != '' ">
+    <div style="margin-bottom: 20px;">
+    <h4>High Score: {{ highScore }}</h4>
+  </div>
+    
+    <div style="display: flex; gap: 20px;">
+      <h5>Guess the cocktail:</h5> 
+      <p style="letter-spacing: 0.2em;">{{ hiddenCocktailName }}</p>
+    </div>
 
+    <div style="display: flex; gap: 10px; margin-bottom: 20px;">
+      <input [(ngModel)]="guess"  class="form-control" id="FormControlInput1" placeholder="Your guess" style="flex: 1;">
+      <button (click)="makeGuess()" type="button" class="btn btn-primary">Guess</button>
+      <button (click)="skip()" type="button" class="btn btn-secondary">Skip</button>
+    </div>
+
+    <div style="display: flex; flex-direction: column; margin-bottom: 20px;">
+      <div [ngClass]="{'show-error': showError}" ><b>Attempts left:</b> {{ attemptsLeft }}</div>
+      <div><b>Current Score:</b> {{ currentScore }}</div>
+    </div>
+
+    <div style="margin-bottom: 10px;"><b>HINTS:</b></div>
     <p><b>Instructions:</b> {{ instructions }}</p>
     <p *ngIf="attemptsLeft <= 4"><b>Category:</b> {{category}} </p>
     <p *ngIf="attemptsLeft <= 3"><b>Glass:</b> {{glass}} </p>
@@ -23,16 +39,15 @@
       </ul>
     </div>
     <div  *ngIf="attemptsLeft <= 1">
-      <img [src]="imageUrl" alt="Cocktail Image" style="width: 150px; height: auto;"/>
+      <img [src]="imageUrl" alt="Cocktail Image" />
     </div>
-    <p><b>Attempts left:</b> {{ attemptsLeft }}</p>
-    <p><b>Current Score:</b> {{ currentScore }}</p>
+    
   </div>
 
   <div *ngIf="gameOver">
     <h2>Game Over</h2>
     <p>The cocktail was: {{ cocktailName }}</p>
     <p><b>Your final score:</b> {{ currentScore }}</p>
-    <button (click)="restartGame()">Play Again</button>
+    <button (click)="restartGame()" type="button" class="btn btn-secondary">Play Again</button>
   </div>
 </div>
