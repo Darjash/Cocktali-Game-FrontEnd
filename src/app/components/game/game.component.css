@@ -1,0 +1,8 @@
+.show-error {
+  color: red;
+}
+
+.show-correct {
+  border-color: green;
+  background-color: rgb(180, 220, 180);
+}

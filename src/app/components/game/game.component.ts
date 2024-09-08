@@ -20,6 +20,7 @@ export class GameComponent implements OnInit {
   guess: string = '';
   gameOver: boolean = false;
   showError: boolean = false;
+  showCorrect: boolean = false;
   isSkipButtonDisabled: boolean= false;
 
   constructor(private gameService: GameService) {}
@@ -86,6 +87,10 @@ export class GameComponent implements OnInit {
         setTimeout(() => this.showError = false, 500); 
       }
     });
+    if(this.cocktailName === this.guess){
+      this.showCorrect = true;
+        setTimeout(() => this.showCorrect = false, 500); 
+    }
     this.guess = '';
   }
 
