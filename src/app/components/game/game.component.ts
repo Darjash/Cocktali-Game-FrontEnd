@@ -30,19 +30,25 @@ export class GameComponent implements OnInit {
     this.getHighScore();
   }
 
-  startNewGame(): void {
+
+  handleGameData(data: any): void {
+    this.hiddenCocktailName = data.hiddenCocktailName;
+    this.instructions = data.currentCocktail.strInstructions;
+    this.imageUrl = data.currentCocktail.strDrinkThumb;
+    this.category = data.currentCocktail.strCategory;
+    this.glass = data.currentCocktail.strGlass;
+    this.ingredients = data.currentCocktail.ingredients;
+    this.attemptsLeft = data.attemptsLeft;
+    this.currentScore = data.score;
+    this.cocktailName = data.currentCocktail.strDrink;
+  }
+
+
+ startNewGame(): void {
     this.isSkipButtonDisabled = false;
     this.gameService.startGame().subscribe(data => {
-      this.hiddenCocktailName = data.hiddenCocktailName;
-      this.attemptsLeft = data.attemptsLeft;
-      this.currentScore = data.score;
-      this.cocktailName = data.currentCocktail.strDrink;
-      this.instructions = data.currentCocktail.strInstructions;
-      this.imageUrl = data.currentCocktail.strDrinkThumb;
-      this.category = data.currentCocktail.strCategory;
-      this.glass = data.currentCocktail.strGlass;
-      this.ingredients = data.currentCocktail.ingredients;
-      if(data.hiddenCocktailName.replace(/[^_]/g, "").length <=2){
+      this.handleGameData(data);
+      if(data.hiddenCocktailName.replace(/[^_]/g, "").length <= 2) {
         this.isSkipButtonDisabled = true;
       }
     });
@@ -52,18 +58,10 @@ export class GameComponent implements OnInit {
   restartGame(): void {
     this.isSkipButtonDisabled = false;
     this.gameService.restartGame().subscribe(data => {  
-      this.hiddenCocktailName = data.hiddenCocktailName;
-      this.instructions = data.currentCocktail.strInstructions;
-      this.imageUrl = data.currentCocktail.strDrinkThumb;
-      this.category = data.currentCocktail.strCategory;
-      this.glass = data.currentCocktail.strGlass;
-      this.ingredients = data.currentCocktail.ingredients;
-      this.attemptsLeft = data.attemptsLeft;
-      this.currentScore = data.score;
-      this.cocktailName = data.currentCocktail.strDrink;
-      if(data.hiddenCocktailName.replace(/[^_]/g, "").length <=2){
-            this.isSkipButtonDisabled = true;
-          }
+      this.handleGameData(data);
+      if(data.hiddenCocktailName.replace(/[^_]/g, "").length <= 2) {
+        this.isSkipButtonDisabled = true;
+      }
     });
     this.gameOver = false;
     this.getHighScore();
@@ -75,15 +73,7 @@ export class GameComponent implements OnInit {
     const previousAttempts = this.attemptsLeft;
 
     this.gameService.makeGuess(this.guess.trim()).subscribe(data => {
-      this.hiddenCocktailName = data.hiddenCocktailName;
-      this.attemptsLeft = data.attemptsLeft;
-      this.currentScore = data.score;
-      this.cocktailName = data.currentCocktail.strDrink;
-      this.instructions = data.currentCocktail.strInstructions;
-      this.category = data.currentCocktail.strCategory;
-      this.glass = data.currentCocktail.strGlass;
-      this.imageUrl = data.currentCocktail.strDrinkThumb;
-      this.ingredients = data.currentCocktail.ingredients;
+      this.handleGameData(data);
 
       if (data.attemptsLeft === 0) {
         this.gameOver = true;
@@ -96,10 +86,10 @@ export class GameComponent implements OnInit {
       }
     });
 
-    if(this.cocktailName.toLowerCase().trim() === this.guess.toLowerCase().trim()){
+    if (this.cocktailName.toLowerCase().trim() === this.guess.toLowerCase().trim()) {
       this.isSkipButtonDisabled = false;
       this.showCorrect = true;
-        setTimeout(() => this.showCorrect = false, 500); 
+      setTimeout(() => this.showCorrect = false, 500); 
     }
     this.guess = '';
   }
