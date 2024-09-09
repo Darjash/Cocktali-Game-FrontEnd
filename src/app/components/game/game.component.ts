@@ -31,6 +31,7 @@ export class GameComponent implements OnInit {
   }
 
   startNewGame(): void {
+    this.isSkipButtonDisabled = false;
     this.gameService.startGame().subscribe(data => {
       this.hiddenCocktailName = data.hiddenCocktailName;
       this.attemptsLeft = data.attemptsLeft;
@@ -41,10 +42,15 @@ export class GameComponent implements OnInit {
       this.category = data.currentCocktail.strCategory;
       this.glass = data.currentCocktail.strGlass;
       this.ingredients = data.currentCocktail.ingredients;
+      if(data.hiddenCocktailName.replace(/[^_]/g, "").length <=2){
+        this.isSkipButtonDisabled = true;
+      }
     });
     this.getHighScore();
   }
+
   restartGame(): void {
+    this.isSkipButtonDisabled = false;
     this.gameService.restartGame().subscribe(data => {  
       this.hiddenCocktailName = data.hiddenCocktailName;
       this.instructions = data.currentCocktail.strInstructions;
@@ -55,16 +61,17 @@ export class GameComponent implements OnInit {
       this.attemptsLeft = data.attemptsLeft;
       this.currentScore = data.score;
       this.cocktailName = data.currentCocktail.strDrink;
+      if(data.hiddenCocktailName.replace(/[^_]/g, "").length <=2){
+            this.isSkipButtonDisabled = true;
+          }
     });
     this.gameOver = false;
     this.getHighScore();
-    if(this.hiddenCocktailName.replace(/[^_]/g, "").length <=2){
-      this.isSkipButtonDisabled = true;
-    }
   }
 
   makeGuess(): void {
     if (!this.guess) return;
+
     const previousAttempts = this.attemptsLeft;
 
     this.gameService.makeGuess(this.guess.trim()).subscribe(data => {
@@ -82,12 +89,15 @@ export class GameComponent implements OnInit {
         this.gameOver = true;
         this.getHighScore();
       }
+
       if (this.attemptsLeft < previousAttempts && this.guess != "UserSkippedRound") {
         this.showError = true;
         setTimeout(() => this.showError = false, 500); 
       }
     });
-    if(this.cocktailName === this.guess){
+
+    if(this.cocktailName.toLowerCase().trim() === this.guess.toLowerCase().trim()){
+      this.isSkipButtonDisabled = false;
       this.showCorrect = true;
         setTimeout(() => this.showCorrect = false, 500); 
     }
